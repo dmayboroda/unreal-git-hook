@@ -2,7 +2,8 @@
 
 STORAGE_FILE=".git/daily_commit_counter"
 TODAY=$(date +%Y-%m-%d)
-SOUND_DIR="./unreal/"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SOUND_DIR="$SCRIPT_DIR/unreal"
 
 declare -A COMMIT_MESSAGES=(
     [1]="First blood"
