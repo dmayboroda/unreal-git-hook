@@ -2,7 +2,7 @@ For all you fans of the Quake and Unreal Tournament series!
 
 Now, git commits and merges get a fresh twist! When you commit, you can hear your favorite exclamations like “Godlike” and “Unstoppable,” and when you merge, you might hear “Impressive.” There are a total of 15 sounds in the library, triggered by different commit counts in a specific project. This repository was created to spice up your daily coding routine and evoke nostalgia for those carefree times spent playing Quake 3 Arena or Unreal Tournament. Now our arena is the IDE!
 
-Essentially, unreal-git-hook is a set of custom Git hooks you can set up for your project. Currently, there are two hooks: post-commit and post-merge. That means whenever you run git commit ... in the console for a specific project, you’ll hear one of the classic exclamations from your favorite games.
+Essentially, unreal-git-hook is a set of custom Git hooks you can set up for your project. Currently, there are two hooks: post-commit and post-merge. That means whenever you run 'git commit ...' or 'git merge' in the console for a specific project, you’ll hear one of the classic exclamations from your favorite games.
 
 For post-commit, the sound depends on the number of commits:
 
