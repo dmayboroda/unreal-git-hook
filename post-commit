@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+STORAGE_FILE=".git/daily_commit_counter"
+TODAY=$(date +%Y-%m-%d)
+SOUND_DIR="./unreal/"
+
+declare -A COMMIT_MESSAGES=(
+    [1]="First blood"
+    [2]="Double kill"
+    [3]="Triple kill"
+    [4]="Multi kill"
+    [5]="Ultra kill"
+    [6]="Killing spree"
+    [7]="Monster kill"
+    [8]="Holy shit"
+    [9]="Rampage"
+    [10]="Dominating"
+    [11]="Unstoppable"
+    [12]="Godlike"
+)
+
+get_daily_count() {
+    local stored_date stored_count
+
+    if [ -f "$STORAGE_FILE" ]; then
+        read -r stored_date stored_count < "$STORAGE_FILE"
+        
+        if [ "$stored_date" = "$TODAY" ]; then
+            echo $((stored_count + 1))
+            return
+        fi
+    fi
+    
+    echo 1
+}
+
+play_achievement_sound() {
+    local count=$1
+    local message="${COMMIT_MESSAGES[$count]:-Wicked sick}"
+    local sound_file
+    
+    sound_file=$(echo "$message" | tr '[:upper:]' '[:lower:]')
+    sound_file="${sound_file// /_}.mp3"
+    
+    if [ -f "$SOUND_DIR/$sound_file" ]; then
+        afplay "$SOUND_DIR/$sound_file"
+        echo "$message!"
+    else
+        echo "Warning: Sound file not found: $SOUND_DIR/$sound_file"
+    fi
+}
+
+main() {
+
+    DAILY_COUNT=$(get_daily_count)
+    echo "$TODAY $DAILY_COUNT" > "$STORAGE_FILE"
+    
+    echo "Daily commit count for $TODAY: $DAILY_COUNT"
+    play_achievement_sound "$DAILY_COUNT"
+}
+
+main
+
+exit 0

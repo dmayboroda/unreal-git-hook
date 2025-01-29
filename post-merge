@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+SOUND_DIR="./unreal/"
+
+play_achievement_sound() {
+    local sounds=("impressive" "perfect")
+    local random_index=$((RANDOM % 2))
+    local sound_file="${sounds[$random_index]}.mp3"
+    
+    if [ -f "$SOUND_DIR/$sound_file" ]; then
+        afplay "$SOUND_DIR/$sound_file"
+        echo "${sounds[$random_index]^}!"
+    else
+        echo "Warning: Sound file not found: $SOUND_DIR/$sound_file"
+    fi
+}
+
+main() {
+    play_achievement_sound
+}
+
+main
+
+exit 0
+
