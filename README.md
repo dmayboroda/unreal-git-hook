@@ -8,7 +8,7 @@ For post-commit, the sound depends on the number of commits:
 
 <li> 1 commit — “First blood”</li>
 <li> 2 commits — “Double kill”</li>
-<li> 3 commits — “Triple kill”</li>
+<li> 3 commits — “Tripple kill”</li>
 <li> 4 commits — “Multi kill” </li>
 <li> 5 commits — “Ultra kill” </li>
 <li> 6 commits — “Killing spree” </li>
