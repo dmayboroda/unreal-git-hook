@@ -38,3 +38,5 @@ sh remove.sh path/to/your/development/project/
 There’s an idea to add more logic, like if you hit 3 commits in one hour, you get a “Monster Kill” or something similar. I’m really looking forward to hearing your ideas!
 
 “First blood!”
+
+<b>I’d like to apologize in advance to Id Software and Epic Games, but Quake/Unreal Tournament Announcer packs are already freely available all over the internet. I also couldn’t find any license or similar documentation that would allow for use beyond simply downloading the pack. Maybe I shouldn’t have uploaded them to GitHub, but please view it as a tribute and an expression of nostalgia for such wonderful games as Quake 3 and Unreal Tournament. If this causes any concern, I’m willing to take down the repository. Thank you! </b>
