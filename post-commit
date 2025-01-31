@@ -38,26 +38,36 @@ get_daily_count() {
 play_achievement_sound() {
     local count=$1
     local message="${COMMIT_MESSAGES[$count]:-Wicked sick}"
-    local sound_file
 
+    local sound_file
     sound_file=$(echo "$message" | tr '[:upper:]' '[:lower:]')
     sound_file="${sound_file// /_}.mp3"
 
-    if [ -f "$SOUND_DIR/$sound_file" ]; then
-        if command -v afplay &> /dev/null; then
-            afplay "$SOUND_DIR/$sound_file" &> /dev/null
-        elif command -v mplayer &> /dev/null; then
-            mplayer "$SOUND_DIR/$sound_file" &> /dev/null
-        elif command -v ffplay &> /dev/null; then
-            ffplay -autoexit -nodisp "$SOUND_DIR/$sound_file" &> /dev/null
-        elif command -v cvlc &> /dev/null; then
-            cvlc --play-and-exit "$SOUND_DIR/$sound_file" &> /dev/null
-        else
-            echo "None of 'afplay', 'mplayer', 'ffplay', 'cvlc' are not available in PATH"
-        fi
-        echo "$message!"
-    else
+    if [ ! -f "$SOUND_DIR/$sound_file" ]; then
         echo "Warning: Sound file not found: $SOUND_DIR/$sound_file"
+        return
+    fi
+
+    local played=false
+    local players=(
+        "afplay" 
+        "mplayer" 
+        "ffplay -autoexit -nodisp" 
+        "cvlc --play-and-exit"
+    )
+
+    for player in "${players[@]}"; do
+        if command -v ${player%% *} &> /dev/null; then
+            $player "$SOUND_DIR/$sound_file" &> /dev/null
+            played=true
+            break
+        fi
+    done
+
+    if [ "$played" = false ]; then
+        echo "No supported audio player found. Please install one of: afplay, mplayer, ffplay, or cvlc"
+    else
+        echo "$message!"
     fi
 }
 

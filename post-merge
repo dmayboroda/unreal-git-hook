@@ -4,25 +4,38 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SOUND_DIR="$SCRIPT_DIR/unreal"
 
 play_achievement_sound() {
+    # Define available sounds and select one randomly
     local sounds=("impressive" "perfect")
-    local random_index=$((RANDOM % 2))
-    local sound_file="${sounds[$random_index]}.mp3"
+    local random_index=$((RANDOM % ${#sounds[@]}))
+    local selected_sound="${sounds[$random_index]}"
+    local sound_file="$SOUND_DIR/${selected_sound}.mp3"
 
-    if [ -f "$SOUND_DIR/$sound_file" ]; then
-        if command -v afplay &> /dev/null; then
-            afplay "$SOUND_DIR/$sound_file" &> /dev/null
-        elif command -v mplayer &> /dev/null; then
-            mplayer "$SOUND_DIR/$sound_file" &> /dev/null
-        elif command -v ffplay &> /dev/null; then
-            ffplay -autoexit -nodisp "$SOUND_DIR/$sound_file" &> /dev/null
-        elif command -v cvlc &> /dev/null; then
-            cvlc --play-and-exit "$SOUND_DIR/$sound_file" &> /dev/null
-        else
-            echo "None of 'afplay', 'mplayer', 'ffplay', 'cvlc' are not available in PATH"
+    # Check if sound file exists
+    if [ ! -f "$sound_file" ]; then
+        echo "Warning: Sound file not found: $sound_file"
+        return
+    fi
+
+    local players=(
+        "afplay"
+        "mplayer"
+        "ffplay -autoexit -nodisp"
+        "cvlc --play-and-exit"
+    )
+
+    local played=false
+    for player in "${players[@]}"; do
+        if command -v ${player%% *} &> /dev/null; then
+            $player "$sound_file" &> /dev/null
+            played=true
+            break
         fi
-        echo "${sounds[$random_index]^}!"
+    done
+
+    if [ "$played" = false ]; then
+        echo "No supported audio player found. Please install one of: afplay, mplayer, ffplay, or cvlc"
     else
-        echo "Warning: Sound file not found: $SOUND_DIR/$sound_file"
+        echo "${selected_sound^}!"
     fi
 }
 
