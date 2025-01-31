@@ -25,13 +25,13 @@ get_daily_count() {
 
     if [ -f "$STORAGE_FILE" ]; then
         read -r stored_date stored_count < "$STORAGE_FILE"
-        
+
         if [ "$stored_date" = "$TODAY" ]; then
             echo $((stored_count + 1))
             return
         fi
     fi
-    
+
     echo 1
 }
 
@@ -39,12 +39,22 @@ play_achievement_sound() {
     local count=$1
     local message="${COMMIT_MESSAGES[$count]:-Wicked sick}"
     local sound_file
-    
+
     sound_file=$(echo "$message" | tr '[:upper:]' '[:lower:]')
     sound_file="${sound_file// /_}.mp3"
-    
+
     if [ -f "$SOUND_DIR/$sound_file" ]; then
-        afplay "$SOUND_DIR/$sound_file"
+        if command -v afplay &> /dev/null; then
+            afplay "$SOUND_DIR/$sound_file" &> /dev/null
+        elif command -v mplayer &> /dev/null; then
+            mplayer "$SOUND_DIR/$sound_file" &> /dev/null
+        elif command -v ffplay &> /dev/null; then
+            ffplay -autoexit -nodisp "$SOUND_DIR/$sound_file" &> /dev/null
+        elif command -v cvlc &> /dev/null; then
+            cvlc --play-and-exit "$SOUND_DIR/$sound_file" &> /dev/null
+        else
+            echo "None of 'afplay', 'mplayer', 'ffplay', 'cvlc' are not available in PATH"
+        fi
         echo "$message!"
     else
         echo "Warning: Sound file not found: $SOUND_DIR/$sound_file"
@@ -55,7 +65,7 @@ main() {
 
     DAILY_COUNT=$(get_daily_count)
     echo "$TODAY $DAILY_COUNT" > "$STORAGE_FILE"
-    
+
     echo "Daily commit count for $TODAY: $DAILY_COUNT"
     play_achievement_sound "$DAILY_COUNT"
 }
