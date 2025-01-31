@@ -7,9 +7,19 @@ play_achievement_sound() {
     local sounds=("impressive" "perfect")
     local random_index=$((RANDOM % 2))
     local sound_file="${sounds[$random_index]}.mp3"
-    
+
     if [ -f "$SOUND_DIR/$sound_file" ]; then
-        afplay "$SOUND_DIR/$sound_file"
+        if command -v afplay &> /dev/null; then
+            afplay "$SOUND_DIR/$sound_file" &> /dev/null
+        elif command -v mplayer &> /dev/null; then
+            mplayer "$SOUND_DIR/$sound_file" &> /dev/null
+        elif command -v ffplay &> /dev/null; then
+            ffplay -autoexit -nodisp "$SOUND_DIR/$sound_file" &> /dev/null
+        elif command -v cvlc &> /dev/null; then
+            cvlc --play-and-exit "$SOUND_DIR/$sound_file" &> /dev/null
+        else
+            echo "None of 'afplay', 'mplayer', 'ffplay', 'cvlc' are not available in PATH"
+        fi
         echo "${sounds[$random_index]^}!"
     else
         echo "Warning: Sound file not found: $SOUND_DIR/$sound_file"
