@@ -20,6 +20,7 @@ fi
 
 mkdir -p "$HOOKS_PATH"
 
+cp player.sh "$HOOKS_PATH/"
 cp post-commit "$HOOKS_PATH/"
 cp post-merge "$HOOKS_PATH/"
 

@@ -2,7 +2,8 @@
 #set -x
 #set -e
 
-source ./player.sh
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$SCRIPT_DIR/player.sh"
 
 STORAGE_FILE=".git/daily_commit_counter"
 TODAY=$(date +%Y-%m-%d)
