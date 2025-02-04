@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -e
-#set -x
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -8,6 +7,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # lua_index starts with 1, sorry
 function get_file() {
   local lua_index=$1
+  if [ "$lua_index" -gt 12 ]; then
+    lua_index=15
+  fi
   local file
   file=$(find "$SCRIPT_DIR/unreal" -maxdepth 1 -type f | sort | sed -n "${lua_index}p")
   echo "$file"
@@ -44,5 +46,3 @@ function play_praise() {
   play "${sounds[$index]}"
 }
 
-#play "$@"
-#play_praise 
