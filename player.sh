@@ -38,4 +38,11 @@ function play() {
     fi
 }
 
+function play_praise() {
+  local sounds=(13 14 15)
+  local index=$((RANDOM % ${#sounds[@]}))
+  play "${sounds[$index]}"
+}
+
 #play "$@"
+#play_praise 

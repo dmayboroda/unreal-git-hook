@@ -1,46 +1,9 @@
 #!/usr/bin/env bash
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SOUND_DIR="$SCRIPT_DIR/unreal"
-
-play_achievement_sound() {
-    # Define available sounds and select one randomly
-    local sounds=("impressive" "perfect")
-    local random_index=$((RANDOM % ${#sounds[@]}))
-    local selected_sound="${sounds[$random_index]}"
-    local sound_file="$SOUND_DIR/${selected_sound}.mp3"
-
-    # Check if sound file exists
-    if [ ! -f "$sound_file" ]; then
-        echo "Warning: Sound file not found: $sound_file"
-        return
-    fi
-
-    local players=(
-        "afplay"
-        "mplayer"
-        "ffplay -autoexit -nodisp"
-        "cvlc --play-and-exit"
-    )
-
-    local played=false
-    for player in "${players[@]}"; do
-        if command -v "${player%% *}" &> /dev/null; then
-            $player "$sound_file" &> /dev/null
-            played=true
-            break
-        fi
-    done
-
-    if [ "$played" = false ]; then
-        echo "No supported audio player found. Please install one of: afplay, mplayer, ffplay, or cvlc"
-    else
-        echo "${selected_sound^}!"
-    fi
-}
+source ./player.sh
 
 main() {
-    play_achievement_sound
+    play_praise
 }
 
 main

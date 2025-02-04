@@ -47,7 +47,6 @@ play_achievement_sound() {
 
 main() {
 
-    echo "startin counting"
     DAILY_COUNT=$(get_daily_count)
     echo "$TODAY $DAILY_COUNT" > "$STORAGE_FILE"
 
