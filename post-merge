@@ -25,7 +25,7 @@ play_achievement_sound() {
 
     local played=false
     for player in "${players[@]}"; do
-        if command -v ${player%% *} &> /dev/null; then
+        if command -v "${player%% *}" &> /dev/null; then
             $player "$sound_file" &> /dev/null
             played=true
             break
