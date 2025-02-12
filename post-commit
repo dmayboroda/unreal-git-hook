@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "$SCRIPT_DIR/player.sh"
+
 STORAGE_FILE=".git/daily_commit_counter"
 TODAY=$(date +%Y-%m-%d)
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SOUND_DIR="$SCRIPT_DIR/unreal"
 
-declare -A COMMIT_MESSAGES=(
+declare -a COMMIT_MESSAGES=(
     [1]="First blood"
     [2]="Double kill"
     [3]="Triple kill"
@@ -39,36 +40,8 @@ play_achievement_sound() {
     local count=$1
     local message="${COMMIT_MESSAGES[$count]:-Wicked sick}"
 
-    local sound_file
-    sound_file=$(echo "$message" | tr '[:upper:]' '[:lower:]')
-    sound_file="${sound_file// /_}.mp3"
-
-    if [ ! -f "$SOUND_DIR/$sound_file" ]; then
-        echo "Warning: Sound file not found: $SOUND_DIR/$sound_file"
-        return
-    fi
-
-    local played=false
-    local players=(
-        "afplay" 
-        "mplayer" 
-        "ffplay -autoexit -nodisp" 
-        "cvlc --play-and-exit"
-    )
-
-    for player in "${players[@]}"; do
-        if command -v ${player%% *} &> /dev/null; then
-            $player "$SOUND_DIR/$sound_file" &> /dev/null
-            played=true
-            break
-        fi
-    done
-
-    if [ "$played" = false ]; then
-        echo "No supported audio player found. Please install one of: afplay, mplayer, ffplay, or cvlc"
-    else
-        echo "$message!"
-    fi
+    play "$count" 
+    echo "$message"
 }
 
 main() {
@@ -78,6 +51,7 @@ main() {
 
     echo "Daily commit count for $TODAY: $DAILY_COUNT"
     play_achievement_sound "$DAILY_COUNT"
+    
 }
 
 main
